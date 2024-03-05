@@ -1,14 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import appConfig from './config/app.config';
+import AppConfig from './config';
+import { ImageModule } from './modules/image/image.module';
+import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ cache: true, load: [appConfig], isGlobal: true }),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+	imports: [
+		TypedConfigModule.forRoot({
+			schema: AppConfig,
+			load: dotenvLoader(),
+			isGlobal: true,
+		}),
+		ImageModule,
+	],
+	controllers: [AppController],
+	providers: [AppService],
 })
 export class AppModule {}
