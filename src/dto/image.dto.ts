@@ -1,12 +1,26 @@
-import { IsInt, IsString } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class UploadImageDto {
-	@IsString({ always: false })
+export class ImageDto {
+	@IsString()
+	@IsNotEmpty()
 	path: string;
 
-	@IsString({ always: false })
-	name: string;
+	@Type(() => Number)
+	@IsNumber()
+	@IsNotEmpty()
+	id: number;
 
-	@IsInt({ always: false })
-	size: number;
+	@IsOptional()
+	@IsString()
+	@IsNotEmpty()
+	beforeName: string;
 }
+
+export class UploadImageDto extends ImageDto {}
+
+export class DeleteImageDto extends PickType(ImageDto, [
+	'path',
+	'id',
+] as const) {}

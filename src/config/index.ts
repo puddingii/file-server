@@ -1,11 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsEnum, IsNumber, Max, Min } from 'class-validator';
-
-enum Environment {
-	Development = 'development',
-	Production = 'production',
-	Test = 'test',
-}
+import { Environment } from 'src/enum';
 
 export default class AppConfig {
 	@IsEnum(Environment)
