@@ -16,3 +16,26 @@ export const enum FileMaximumSize {
 	Video = FileSize.MB * 200,
 	Other = FileSize.MB * 200,
 }
+
+export const ImageMimeMapper = {
+	'image/png': ['png'],
+	'image/jpeg': ['jpeg', 'jpg'],
+} as const;
+
+type TImageMimeMapperKeys = keyof typeof ImageMimeMapper;
+
+export const ImageFileExtList = Object.values(ImageMimeMapper).reduce(
+	(acc, cur) => {
+		acc.push(...cur);
+		return acc;
+	},
+	[] as string[],
+);
+
+export const ImageFileMimeList = Object.keys(ImageMimeMapper).reduce(
+	(acc, cur: TImageMimeMapperKeys) => {
+		acc.push(cur);
+		return acc;
+	},
+	[] as TImageMimeMapperKeys[],
+);

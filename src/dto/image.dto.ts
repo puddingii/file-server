@@ -12,15 +12,16 @@ export class ImageDto {
 	@IsNotEmpty()
 	id: number;
 
-	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	beforeName: string;
 }
 
-export class UploadImageDto extends ImageDto {}
+export class UploadImageDto extends PickType(ImageDto, ['path', 'id']) {
+	@IsOptional()
+	@IsString()
+	@IsNotEmpty()
+	beforeName?: string;
+}
 
-export class DeleteImageDto extends PickType(ImageDto, [
-	'path',
-	'id',
-] as const) {}
+export class DeleteImageDto extends ImageDto {}
