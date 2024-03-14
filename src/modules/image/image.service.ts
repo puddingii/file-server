@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { extension } from 'mime-types';
 import * as fs from 'fs/promises';
+import { resolve } from 'path';
 import { UploadImageDto } from 'src/dto/image.dto';
 import { PngStrategy } from './strategies/sharp/png.strategy';
 import { JpegStrategy } from './strategies/sharp/jpeg.strategy';
@@ -57,13 +58,17 @@ export class ImageService {
 
 		const compressResult = await this.imageManager.compress({
 			savePath: apiInfo.path,
-			file: file.filename,
+			mainName: file.originalname,
+			tempName: file.filename,
 		});
 		console.log(compressResult);
+		// TODO Message queue emit 작업 필요.
 	}
 
-	async deleteImage(path: string, name: string) {
-		console.log(path, name);
-		await fs.rm(path, { force: true });
+	async deleteImage(imageInfo: { path: string; name: string }) {
+		const { name, path } = imageInfo;
+		await fs.rm(resolve(__dirname, `../../../assets/${path}/${name}`), {
+			force: true,
+		});
 	}
 }

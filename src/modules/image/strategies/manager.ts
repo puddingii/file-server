@@ -16,8 +16,9 @@ export class ImageManager {
 	}
 
 	async compress<T extends TSharpStrategyInfo>(info: {
+		mainName: string;
+		tempName: string;
 		savePath: string;
-		file: string;
 	}): Promise<ReturnType<T['compress']>> {
 		const path = this.strategy.getMainDirectory(info.savePath);
 		await this.createMainDirectory(path);

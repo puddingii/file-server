@@ -3,6 +3,7 @@ import {
 	Controller,
 	Delete,
 	FileTypeValidator,
+	HttpStatus,
 	MaxFileSizeValidator,
 	ParseFilePipe,
 	Post,
@@ -42,15 +43,24 @@ export class ImageController {
 	) {
 		const { id, path, beforeName } = imageDto;
 		await this.imageService.compressImage({ file, apiInfo: { id, path } });
-		if (imageDto.beforeName) {
-			await this.deleteFile({ id, path, beforeName });
+		if (beforeName) {
+			await this.imageService.deleteImage({ path, name: beforeName });
 		}
 
-		res.send('');
+		res.sendStatus(HttpStatus.CREATED);
 	}
 
 	@Delete()
-	async deleteFile(@Query() imageDto: DeleteImageDto) {
-		console.log('delete', imageDto);
+	async deleteFile(
+		@Res()
+		res: Response,
+		@Query() imageDto: DeleteImageDto,
+	) {
+		await this.imageService.deleteImage({
+			name: imageDto.beforeName,
+			path: imageDto.path,
+		});
+
+		res.sendStatus(HttpStatus.OK);
 	}
 }

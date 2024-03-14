@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { mkdir } from 'fs/promises';
 import * as path from 'path';
 
 @Injectable()
@@ -18,10 +17,5 @@ export abstract class AbstractStrategy<T> {
 
 	getTempDirectory(additionalPath: string) {
 		return path.resolve(this.rootDir, `${this.tempDir}${`/${additionalPath}`}`);
-	}
-
-	protected async createMainDirectory(path: string) {
-		const result = await mkdir(path, { recursive: true });
-		return result;
 	}
 }
