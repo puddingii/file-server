@@ -1,13 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import AppConfig from './config';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
-	const { PORT, isDevelopment, isProduction } = app.get(AppConfig);
+	const logger = new Logger();
+	const { PORT, isDevelopment, isProduction, originList } = app.get(AppConfig);
 
-	app.enableCors({ origin: '*', credentials: true });
+	app.enableCors({ origin: originList, credentials: true });
 	app.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -19,7 +20,7 @@ async function bootstrap() {
 	);
 
 	await app.listen(PORT, () => {
-		console.log(`Nest on: http://localhost:${PORT}`);
+		logger.log(`Nest on: http://localhost:${PORT}`);
 	});
 }
 bootstrap();

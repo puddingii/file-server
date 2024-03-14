@@ -1,5 +1,13 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsNumber, Max, Min } from 'class-validator';
+import {
+	IsArray,
+	IsBoolean,
+	IsEnum,
+	IsNumber,
+	IsString,
+	Max,
+	Min,
+} from 'class-validator';
 import { Environment } from 'src/enum';
 
 export default class AppConfig {
@@ -12,6 +20,9 @@ export default class AppConfig {
 	@Type(() => Number)
 	PORT: number;
 
+	@IsString()
+	ORIGIN_LIST_STR: string;
+
 	@IsBoolean()
 	get isDevelopment() {
 		return this.NODE_ENV === Environment.Development;
@@ -20,5 +31,10 @@ export default class AppConfig {
 	@IsBoolean()
 	get isProduction() {
 		return this.NODE_ENV === Environment.Production;
+	}
+
+	@IsArray()
+	get originList() {
+		return this.ORIGIN_LIST_STR?.split(',').map((origin) => new RegExp(origin));
 	}
 }
