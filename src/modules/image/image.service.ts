@@ -8,7 +8,7 @@ import { ClientKafka } from '@nestjs/microservices';
 import { extension } from 'mime-types';
 import { performance } from 'perf_hooks';
 
-import { UploadImageDto } from 'src/dto/image.dto';
+import { GetImageDto, UploadImageDto } from 'src/dto/image.dto';
 import { PngStrategy } from './strategies/sharp/png.strategy';
 import { JpegStrategy } from './strategies/sharp/jpeg.strategy';
 import { ImageManager } from './strategies/manager';
@@ -64,6 +64,7 @@ export class ImageService {
 		this.setImageManager(file.mimetype);
 
 		const startTime = performance.now();
+		/** originalname은 반드시 `${path}/image` 형식일것 */
 		const { format, size } = await this.imageManager.compress({
 			savePath: apiInfo.path,
 			mainName: file.originalname,
@@ -86,6 +87,16 @@ export class ImageService {
 		}
 
 		await this.imageManager.deleteTempImage(name);
+	}
+
+	async getImage(imageInfo: GetImageDto) {
+		const { path, name } = imageInfo;
+		const result = await this.imageManager.getBufferImage({
+			path: `${path}/image`,
+			name,
+		});
+
+		return result;
 	}
 
 	async uploadFile(imageInfo: {

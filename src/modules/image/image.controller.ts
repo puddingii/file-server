@@ -3,8 +3,10 @@ import {
 	Controller,
 	Delete,
 	FileTypeValidator,
+	Get,
 	HttpStatus,
 	MaxFileSizeValidator,
+	Param,
 	ParseFilePipe,
 	Post,
 	Query,
@@ -15,13 +17,21 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './image.service';
 import diskStorage from './storages/diskStorage';
-import { DeleteImageDto, UploadImageDto } from 'src/dto/image.dto';
+import { DeleteImageDto, GetImageDto, UploadImageDto } from 'src/dto/image.dto';
 import { FileMaximumSize, ImageFileExtList } from 'src/enum';
 import { Response } from 'express';
 
 @Controller('image')
 export class ImageController {
 	constructor(private readonly imageService: ImageService) {}
+
+	@Get(':path/:name')
+	async getFile(@Param() imageDto: GetImageDto, @Res() res: Response) {
+		const { image, type } = await this.imageService.getImage(imageDto);
+		res.set({ 'Content-Type': `image/${type}` });
+
+		res.send(image);
+	}
 
 	@Post()
 	@UseInterceptors(FileInterceptor('file', { storage: diskStorage }))

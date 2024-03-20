@@ -5,6 +5,10 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 export class ImageDto {
 	@IsString()
 	@IsNotEmpty()
+	name: string;
+
+	@IsString()
+	@IsNotEmpty()
 	path: string;
 
 	@Type(() => Number)
@@ -17,11 +21,17 @@ export class ImageDto {
 	beforeName: string;
 }
 
-export class UploadImageDto extends PickType(ImageDto, ['path', 'id']) {
+export class GetImageDto extends PickType(ImageDto, ['path', 'name']) {}
+
+export class UploadImageDto extends PickType(ImageDto, ['id', 'path']) {
 	@IsOptional()
 	@IsString()
 	@IsNotEmpty()
 	beforeName?: string;
 }
 
-export class DeleteImageDto extends ImageDto {}
+export class DeleteImageDto extends PickType(ImageDto, [
+	'id',
+	'path',
+	'beforeName',
+]) {}

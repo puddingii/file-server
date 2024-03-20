@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { mkdir, rm } from 'fs/promises';
+import { mkdir, readFile, rm } from 'fs/promises';
 import { SharpStrategy, TSharpStrategyInfo } from './sharp';
 
 @Injectable()
@@ -38,5 +38,14 @@ export class ImageManager {
 		await rm(this.strategy.getTempDirectory(name), {
 			force: true,
 		});
+	}
+
+	async getBufferImage({ path, name }: { path: string; name: string }) {
+		const image = await readFile(
+			this.strategy.getMainDirectory(`${path}/${name}`),
+		);
+		const type = name.split('.').at(-1);
+
+		return { image, type };
 	}
 }
