@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { Transport } from '@nestjs/microservices';
 import AppConfig from './config';
 
 async function bootstrap() {
@@ -18,6 +19,19 @@ async function bootstrap() {
 			disableErrorMessages: isProduction,
 		}),
 	);
+	app.connectMicroservice({
+		transport: Transport.KAFKA,
+		options: {
+			client: {
+				clientId: 'image',
+				brokers: ['localhost:9094'],
+			},
+			producer: {
+				allowAutoTopicCreation: true,
+			},
+			producerOnlyMode: true,
+		},
+	});
 
 	await app.listen(PORT, () => {
 		logger.log(`Nest on: http://localhost:${PORT}`);

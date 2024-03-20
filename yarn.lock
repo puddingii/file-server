@@ -874,6 +874,14 @@
   resolved "https://registry.npmjs.org/@nestjs/mapped-types/-/mapped-types-2.0.5.tgz"
   integrity sha512-bSJv4pd6EY99NX9CjBIyn4TVDoSit82DUZlL4I3bqNfy5Gt+gXTa86i3I/i0iIV9P4hntcGM5GyO+FhZAhxtyg==
 
+"@nestjs/microservices@^10.3.4":
+  version "10.3.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/microservices/-/microservices-10.3.4.tgz#33459e0cf9416340bcc5a04a2205c60de406f0b5"
+  integrity sha512-dJusFRxGqNM3v3gYqE/o9XAYFs1Zm0OahC/CvYISO9SI4Gyxc4W9G4EYHKcKsMyxBKlUmo64H+jI3IqHtjy+Sg==
+  dependencies:
+    iterare "1.2.1"
+    tslib "2.6.2"
+
 "@nestjs/platform-express@^10.0.0":
   version "10.3.3"
   resolved "https://registry.npmjs.org/@nestjs/platform-express/-/platform-express-10.3.3.tgz"
@@ -3700,6 +3708,11 @@ jsonfile@^6.0.1:
     universalify "^2.0.0"
   optionalDependencies:
     graceful-fs "^4.1.6"
+
+kafkajs@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/kafkajs/-/kafkajs-2.2.4.tgz#59e6e16459d87fdf8b64be73970ed5aa42370a5b"
+  integrity sha512-j/YeapB1vfPT2iOIUn/vxdyKEuhuY2PxMBvf5JWux6iSaukAccrMtXEY/Lb7OvavDhOWME589bpLrEdnVHjfjA==
 
 keyv@^4.5.3:
   version "4.5.4"

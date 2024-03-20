@@ -17,6 +17,10 @@ export const enum FileMaximumSize {
 	Other = FileSize.MB * 200,
 }
 
+export const enum KafkaTopic {
+	IMAGE_TOPIC = 'image-topic',
+}
+
 export const ImageMimeMapper = {
 	'image/png': ['png'],
 	'image/jpeg': ['jpeg', 'jpg'],
