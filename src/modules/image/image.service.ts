@@ -1,7 +1,15 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	Logger,
+} from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { extension } from 'mime-types';
 import * as fs from 'fs/promises';
 import { resolve } from 'path';
+import { performance } from 'perf_hooks';
+
 import { UploadImageDto } from 'src/dto/image.dto';
 import { PngStrategy } from './strategies/sharp/png.strategy';
 import { JpegStrategy } from './strategies/sharp/jpeg.strategy';
@@ -15,6 +23,7 @@ export class ImageService {
 		private readonly pngStrategy: PngStrategy,
 		private readonly jpegStrategy: JpegStrategy,
 		private readonly imageManager: ImageManager,
+		@Inject('IMAGE_MICROSERVICE') private readonly imageClient: ClientKafka,
 	) {}
 
 	private getExt(mimeType: string) {
@@ -56,13 +65,27 @@ export class ImageService {
 
 		this.setImageManager(file.mimetype);
 
-		const compressResult = await this.imageManager.compress({
+		const startTime = performance.now();
+		const { format, size } = await this.imageManager.compress({
 			savePath: apiInfo.path,
 			mainName: file.originalname,
 			tempName: file.filename,
 		});
-		console.log(compressResult);
-		// TODO Message queue emit 작업 필요.
+		const exeTime = performance.now() - startTime;
+
+		this.imageClient.emit('image-topic', {
+			key: 'uploadResult-json',
+			value: JSON.stringify({
+				id: apiInfo.id,
+				format,
+				size,
+				exeTime,
+			}),
+		});
+
+		this.logger.log(
+			`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${size}byte +${Math.round(exeTime)}ms `,
+		);
 	}
 
 	async deleteImage(imageInfo: { path: string; name: string }) {
