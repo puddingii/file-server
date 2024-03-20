@@ -41,11 +41,7 @@ export class ImageController {
 		)
 		file: Express.Multer.File,
 	) {
-		const { id, path, beforeName } = imageDto;
-		await this.imageService.compressImage({ file, apiInfo: { id, path } });
-		if (beforeName) {
-			await this.imageService.deleteImage({ path, name: beforeName });
-		}
+		await this.imageService.uploadFile({ file, apiInfo: { ...imageDto } });
 
 		res.sendStatus(HttpStatus.CREATED);
 	}

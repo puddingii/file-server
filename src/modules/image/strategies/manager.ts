@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { mkdir } from 'fs/promises';
+import { mkdir, rm } from 'fs/promises';
 import { SharpStrategy, TSharpStrategyInfo } from './sharp';
 
 @Injectable()
@@ -26,5 +26,17 @@ export class ImageManager {
 		const result = await this.strategy.compress(info);
 
 		return result;
+	}
+
+	async deleteMainImage({ path, name }: { path: string; name: string }) {
+		await rm(this.strategy.getMainDirectory(`${path}/${name}`), {
+			force: true,
+		});
+	}
+
+	async deleteTempImage(name: string) {
+		await rm(this.strategy.getTempDirectory(name), {
+			force: true,
+		});
 	}
 }

@@ -6,8 +6,6 @@ import {
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { extension } from 'mime-types';
-import * as fs from 'fs/promises';
-import { resolve } from 'path';
 import { performance } from 'perf_hooks';
 
 import { UploadImageDto } from 'src/dto/image.dto';
@@ -73,25 +71,49 @@ export class ImageService {
 		});
 		const exeTime = performance.now() - startTime;
 
+		this.logger.log(
+			`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${size}byte +${Math.round(exeTime)}ms `,
+		);
+
+		return { format, size, exeTime };
+	}
+
+	async deleteImage(imageInfo: { path?: string; name: string; isTemp?: true }) {
+		const { name, path, isTemp } = imageInfo;
+		if (!isTemp && path) {
+			await this.imageManager.deleteMainImage({ path, name });
+			return;
+		}
+
+		await this.imageManager.deleteTempImage(name);
+	}
+
+	async uploadFile(imageInfo: {
+		file: Express.Multer.File;
+		apiInfo: UploadImageDto;
+	}) {
+		const {
+			apiInfo: { id, path, beforeName },
+			file,
+		} = imageInfo;
+
+		const { exeTime, format, size } = await this.compressImage({
+			file,
+			apiInfo: { id, path },
+		});
 		this.imageClient.emit('image-topic', {
 			key: 'uploadResult-json',
 			value: JSON.stringify({
-				id: apiInfo.id,
+				id,
 				format,
 				size,
 				exeTime,
 			}),
 		});
 
-		this.logger.log(
-			`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${size}byte +${Math.round(exeTime)}ms `,
-		);
-	}
-
-	async deleteImage(imageInfo: { path: string; name: string }) {
-		const { name, path } = imageInfo;
-		await fs.rm(resolve(__dirname, `../../../assets/${path}/${name}`), {
-			force: true,
-		});
+		await this.deleteImage({ isTemp: true, name: file.filename });
+		if (beforeName) {
+			await this.deleteImage({ path, name: beforeName });
+		}
 	}
 }
