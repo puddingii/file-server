@@ -17,8 +17,12 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './image.service';
 import diskStorage from './storages/diskStorage';
-import { DeleteImageDto, GetImageDto, UploadImageDto } from 'src/dto/image.dto';
-import { FileMaximumSize, ImageFileExtList } from 'src/enum';
+import {
+	DeleteImageDto,
+	GetImageDto,
+	UploadImageDto,
+} from '@global/dto/image.dto';
+import { FileMaximumSize, ImageFileExtList } from '@global/enum';
 import { Response } from 'express';
 
 @Controller('image')

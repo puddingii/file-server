@@ -8,7 +8,7 @@ import { ClientKafka } from '@nestjs/microservices';
 import { extension } from 'mime-types';
 import { performance } from 'perf_hooks';
 
-import { GetImageDto, UploadImageDto } from 'src/dto/image.dto';
+import { GetImageDto, UploadImageDto } from '@global/dto/image.dto';
 import { PngStrategy } from './strategies/sharp/png.strategy';
 import { JpegStrategy } from './strategies/sharp/jpeg.strategy';
 import { ImageManager } from './strategies/manager';
