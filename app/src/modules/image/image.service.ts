@@ -8,7 +8,7 @@ import { ClientKafka } from '@nestjs/microservices';
 import { extension } from 'mime-types';
 import { performance } from 'perf_hooks';
 
-import { GetImageDto, UploadImageDto } from '@global/dto/image.dto';
+import { GetImageDto, UploadImageDto } from 'src/dto/image.dto';
 import { PngStrategy } from './strategies/sharp/png.strategy';
 import { JpegStrategy } from './strategies/sharp/jpeg.strategy';
 import { ImageManager } from './strategies/manager';
@@ -63,20 +63,25 @@ export class ImageService {
 
 		this.setImageManager(file.mimetype);
 
-		const startTime = performance.now();
-		/** originalname은 반드시 `${path}/image` 형식일것 */
-		const { format, size } = await this.imageManager.compress({
-			savePath: apiInfo.path,
-			mainName: file.originalname,
-			tempName: file.filename,
-		});
-		const exeTime = performance.now() - startTime;
+		try {
+			const startTime = performance.now();
+			/** originalname은 반드시 `${path}/image` 형식일것 */
+			const { format, size } = await this.imageManager.compress({
+				savePath: apiInfo.path,
+				mainName: file.originalname,
+				tempName: file.filename,
+			});
+			const exeTime = performance.now() - startTime;
 
-		this.logger.log(
-			`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${size}byte +${Math.round(exeTime)}ms `,
-		);
+			this.logger.log(
+				`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${size}byte +${Math.round(exeTime)}ms `,
+			);
 
-		return { format, size, exeTime };
+			return { format, size, exeTime };
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
 	}
 
 	async deleteImage(imageInfo: { path?: string; name: string; isTemp?: true }) {

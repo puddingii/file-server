@@ -1,12 +1,14 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import * as fs from 'fs';
+import { resolve } from 'path';
 import { extension } from 'mime-types';
 import { diskStorage } from 'multer';
 import generateRandomString from 'src/utils/generateRandomString';
+import { Root } from 'src/enum';
 
 export default diskStorage({
 	destination: function (req, file, cb) {
-		const path = 'temp';
+		const path = resolve(Root, 'temp');
 
 		if (!fs.existsSync(path)) {
 			fs.mkdirSync(path, { recursive: true });
