@@ -1,9 +1,4 @@
-import {
-	BadRequestException,
-	Inject,
-	Injectable,
-	Logger,
-} from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { performance } from 'perf_hooks';
 
@@ -29,7 +24,7 @@ export class ImageService {
 		const image = await result.arrayBuffer();
 		/** 데이터가 없을 시 클라이언트에서 잘못 요청하거나 DB에 주소나 이름 값이 잘못된거임 */
 		if (!image) {
-			throw new BadRequestException('존재하지 않는 이미지 파일입니다.');
+			throw new NotFoundException('존재하지 않는 이미지 파일입니다.');
 		}
 
 		return Buffer.from(image);
