@@ -5,12 +5,14 @@
 	"author": "",
 	"private": true,
 	"packageManager": "yarn@3.8.1",
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"workspaces": [
-		"app"
+		"app",
+		"resize"
 	],
 	"scripts": {
-		"storage": "yarn workspace @file/storage"
+		"storage": "yarn workspace @file/storage",
+		"resize:image": "yarn workspace @file/resize"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",

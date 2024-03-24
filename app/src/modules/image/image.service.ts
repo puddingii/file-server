@@ -55,7 +55,7 @@ export class ImageService {
 		return typeof ext === 'string';
 	}
 
-	async compressImage(imageInfo: {
+	async compressAndSaveImage(imageInfo: {
 		file: Express.Multer.File;
 		apiInfo: Pick<UploadImageDto, 'id' | 'path'>;
 	}) {
@@ -74,7 +74,7 @@ export class ImageService {
 			const exeTime = performance.now() - startTime;
 
 			this.logger.log(
-				`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${size}byte +${Math.round(exeTime)}ms `,
+				`[${apiInfo.id}]${apiInfo.path}/${file.originalname} - ${format} ${file.size}>>${size}byte +${Math.round(exeTime)}ms `,
 			);
 
 			return { format, size, exeTime };
@@ -113,7 +113,7 @@ export class ImageService {
 			file,
 		} = imageInfo;
 
-		const { exeTime, format, size } = await this.compressImage({
+		const { exeTime, format, size } = await this.compressAndSaveImage({
 			file,
 			apiInfo: { id, path },
 		});
