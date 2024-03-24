@@ -22,6 +22,7 @@ export class ImageManager {
 		this.size = { ...info };
 	}
 
+	/** 리사이징은 resize함수를 부르기 전 set함수로 세팅해둔 값으로 진행 */
 	async resize(image: ArrayBuffer) {
 		const options = (
 			Object.keys(this.size) as (keyof typeof this.size)[]
@@ -32,6 +33,7 @@ export class ImageManager {
 			return acc;
 		}, {});
 
+		/** 단순히 사진을 리사이징하는 작업이므로 사진의 일부분이 잘리지 않도록 fill설정 */
 		const resizedImage = await sharp(image)
 			.resize({ ...options, fit: 'fill' })
 			.toBuffer();

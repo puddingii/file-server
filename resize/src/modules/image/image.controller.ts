@@ -14,6 +14,7 @@ export class ImageController {
 		@Res() res: Response,
 	) {
 		let result: Buffer;
+		/** height, width 둘 중 하나라도 있다면 리사이징 진행 */
 		if (imageQuery.height || imageQuery.width) {
 			result = await this.imageService.resizeImage({
 				...imageParam,
