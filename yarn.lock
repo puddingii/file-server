@@ -531,6 +531,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@file/cache@workspace:cache":
+  version: 0.0.0-use.local
+  resolution: "@file/cache@workspace:cache"
+  dependencies:
+    "@nestjs/cli": ^10.0.0
+    "@nestjs/config": ^3.2.0
+    "@nestjs/core": ^10.0.0
+    "@nestjs/mapped-types": ^2.0.5
+    "@nestjs/platform-express": ^10.0.0
+    "@nestjs/schematics": ^10.0.0
+    "@nestjs/serve-static": ^4.0.1
+    "@nestjs/testing": ^10.0.0
+    "@types/express": ^4.17.17
+    "@types/mime-types": ^2.1.4
+    "@types/node": ^20.3.1
+    mime-types: ^2.1.35
+    nest-typed-config: ^2.9.3
+    node-cache: ^5.1.2
+    source-map-support: ^0.5.21
+    ts-loader: ^9.4.3
+    ts-node: ^10.9.1
+    tsconfig-paths: ^4.2.0
+  languageName: unknown
+  linkType: soft
+
 "@file/resize@workspace:resize":
   version: 0.0.0-use.local
   resolution: "@file/resize@workspace:resize"
@@ -546,7 +571,6 @@ __metadata:
     "@nestjs/testing": ^10.0.0
     "@types/express": ^4.17.17
     "@types/jest": ^29.5.2
-    "@types/mime-types": ^2.1.4
     "@types/multer": ^1.4.11
     "@types/node": ^20.3.1
     "@types/supertest": ^6.0.0
@@ -2829,6 +2853,13 @@ __metadata:
     strip-ansi: ^6.0.1
     wrap-ansi: ^7.0.0
   checksum: 79648b3b0045f2e285b76fb2e24e207c6db44323581e421c3acbd0e86454cba1b37aea976ab50195a49e7384b871e6dfb2247ad7dec53c02454ac6497394cb56
+  languageName: node
+  linkType: hard
+
+"clone@npm:2.x":
+  version: 2.1.2
+  resolution: "clone@npm:2.1.2"
+  checksum: aaf106e9bc025b21333e2f4c12da539b568db4925c0501a1bf4070836c9e848c892fa22c35548ce0d1132b08bbbfa17a00144fe58fccdab6fa900fec4250f67d
   languageName: node
   linkType: hard
 
@@ -5818,6 +5849,15 @@ __metadata:
   version: 3.1.1
   resolution: "node-abort-controller@npm:3.1.1"
   checksum: 2c340916af9710328b11c0828223fc65ba320e0d082214a211311bf64c2891028e42ef276b9799188c4ada9e6e1c54cf7a0b7c05dd9d59fcdc8cd633304c8047
+  languageName: node
+  linkType: hard
+
+"node-cache@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "node-cache@npm:5.1.2"
+  dependencies:
+    clone: 2.x
+  checksum: b0bdd81a6fee4754fb984a05246b510bb35dc54721116d465899bf4229ee3287fdafb47da526900ee9924fb402ed5c7d8050049d37d8bf2d26dbafc23a2c3205
   languageName: node
   linkType: hard
 

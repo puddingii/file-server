@@ -8,11 +8,13 @@
 	"license": "MIT",
 	"workspaces": [
 		"app",
-		"resize"
+		"resize",
+		"cache"
 	],
 	"scripts": {
 		"storage": "yarn workspace @file/storage",
-		"resize:image": "yarn workspace @file/resize"
+		"resize": "yarn workspace @file/resize",
+		"file:cache": "yarn workspace @file/cache"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",
