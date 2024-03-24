@@ -23,8 +23,10 @@ export type TSharpStrategyInfo = PngStrategy | JpegStrategy;
 
 @Injectable()
 export class SharpStrategy extends AbstractStrategy<typeof sharp> {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async compress(..._args: any[]): Promise<any> {
+	async compressAndSave(
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		..._args: unknown[]
+	): Promise<sharp.OutputInfo> {
 		throw new Error('Overriding error.');
 	}
 

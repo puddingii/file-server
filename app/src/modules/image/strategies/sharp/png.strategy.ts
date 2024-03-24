@@ -3,20 +3,16 @@ import { SharpStrategy } from '.';
 
 @Injectable()
 export class PngStrategy extends SharpStrategy {
-	async compress(info: {
-		savePath: string;
-		mainName: string;
-		tempName: string;
-	}) {
+	async compressAndSave(info: { from: string; to: string }) {
 		try {
-			const { mainName, tempName, savePath } = info;
+			const { from, to } = info;
 
 			const tool = this.getToolInstance();
-			const compressResult = await tool(this.getTempDirectory(tempName))
+			const compressResult = await tool(from)
 				.png({
 					compressionLevel: 5,
 				})
-				.toFile(this.getMainDirectory(`${savePath}/${mainName}`));
+				.toFile(to);
 
 			return compressResult;
 		} catch (error) {

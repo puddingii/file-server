@@ -7,9 +7,9 @@ export abstract class AbstractStrategy<T> {
 	private mainDir = 'assets';
 	private tempDir = 'temp';
 
-	abstract compress(...args: any[]): Promise<any>;
+	abstract compressAndSave(...args: unknown[]): Promise<unknown>;
 	abstract getToolInstance(): T;
-	abstract getFileName(file: any): string | false;
+	abstract getFileName(file: unknown): string | false;
 
 	getMainDirectory(additionalPath?: string) {
 		const convertedPath = additionalPath ? `/${additionalPath}` : '';

@@ -24,6 +24,7 @@ export class ImageService {
 		@Inject('IMAGE_MICROSERVICE') private readonly imageClient: ClientKafka,
 	) {}
 
+	/** MimeType으로 확장자 가져오기 */
 	private getExt(mimeType: string) {
 		const ext = extension(mimeType);
 		if (!this.isExtValid(ext)) {
@@ -33,6 +34,7 @@ export class ImageService {
 		return ext;
 	}
 
+	/** 확장자에 따라 맞는 Strategy 가져오기 */
 	private getStrategy(ext: string) {
 		switch (ext) {
 			case 'png':
@@ -45,16 +47,19 @@ export class ImageService {
 		}
 	}
 
+	/** Image manager에 MimeType을 기준으로 Strategy 세팅 */
 	private setImageManager(mimetype: string) {
 		const ext = this.getExt(mimetype);
 		const strategy = this.getStrategy(ext);
 		this.imageManager.setStrategy(strategy);
 	}
 
+	/** 확장자가 정상적인지 */
 	private isExtValid(ext: string | boolean): ext is string {
 		return typeof ext === 'string';
 	}
 
+	/** 이미지 압축 후 저장 */
 	async compressAndSaveImage(imageInfo: {
 		file: Express.Multer.File;
 		apiInfo: Pick<UploadImageDto, 'id' | 'path'>;
@@ -65,8 +70,7 @@ export class ImageService {
 
 		try {
 			const startTime = performance.now();
-			/** originalname은 반드시 `${path}/image` 형식일것 */
-			const { format, size } = await this.imageManager.compress({
+			const { format, size } = await this.imageManager.saveImageFromTemp({
 				savePath: apiInfo.path,
 				mainName: file.originalname,
 				tempName: file.filename,
@@ -84,6 +88,7 @@ export class ImageService {
 		}
 	}
 
+	/** Path, Name 기준으로 이미지 삭제. 만약 Path가 없고 isTemp가 true라면 temp폴더에서 이름에 해당하는 파일 삭제 */
 	async deleteImage(imageInfo: { path?: string; name: string; isTemp?: true }) {
 		const { name, path, isTemp } = imageInfo;
 		if (!isTemp && path) {
@@ -94,6 +99,7 @@ export class ImageService {
 		await this.imageManager.deleteTempImage(name);
 	}
 
+	/** Buffer형식의 이미지 데이터 가져오기 */
 	async getImage(imageInfo: GetImageDto) {
 		const { path, name } = imageInfo;
 		const result = await this.imageManager.getBufferImage({
@@ -104,6 +110,7 @@ export class ImageService {
 		return result;
 	}
 
+	/** 로컬에 이미지 업로드 */
 	async uploadFile(imageInfo: {
 		file: Express.Multer.File;
 		apiInfo: UploadImageDto;
@@ -117,6 +124,7 @@ export class ImageService {
 			file,
 			apiInfo: { id, path },
 		});
+		/** 이미지 업로드 결과를 Message Queue에 전달 */
 		this.imageClient.emit('image-topic', {
 			key: 'uploadResult-json',
 			value: JSON.stringify({
@@ -127,7 +135,9 @@ export class ImageService {
 			}),
 		});
 
+		/** 처리완료된 임시 파일은 삭제 */
 		await this.deleteImage({ isTemp: true, name: file.filename });
+		/** 전에 사용하던 파일이 있는 경우 삭제 */
 		if (beforeName) {
 			await this.deleteImage({ path, name: beforeName });
 		}

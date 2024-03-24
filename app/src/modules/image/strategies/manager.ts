@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { mkdir, readFile, rm } from 'fs/promises';
-import { SharpStrategy, TSharpStrategyInfo } from './sharp';
+import { SharpStrategy } from './sharp';
 
 @Injectable()
 export class ImageManager {
@@ -11,36 +11,59 @@ export class ImageManager {
 		return result;
 	}
 
+	/** Main path의 형태는 무조건 `${path}/image`일것 */
+	private checkValidMainPath(path: string) {
+		if (path.split('/').at(-1) !== 'image') {
+			throw new InternalServerErrorException(
+				'Main image path의 형식이 잘못되었습니다.',
+			);
+		}
+	}
+
 	setStrategy(strategy: SharpStrategy) {
 		this.strategy = strategy;
 	}
 
-	async compress<T extends TSharpStrategyInfo>(info: {
+	/** Temp 폴더에 있는 이미지를 압축하고 Main폴더에 저장 */
+	async saveImageFromTemp<T extends SharpStrategy>(info: {
 		mainName: string;
 		tempName: string;
 		savePath: string;
-	}): Promise<ReturnType<T['compress']>> {
-		const path = this.strategy.getMainDirectory(info.savePath);
+	}): Promise<Awaited<ReturnType<T['compressAndSave']>>> {
+		const { mainName, savePath, tempName } = info;
+		this.checkValidMainPath(savePath);
+
+		/** Save하기 전에 미리 Directory 생성 */
+		const path = this.strategy.getMainDirectory(savePath);
 		await this.createMainDirectory(path);
 
-		const result = await this.strategy.compress(info);
+		/** 압축 및 저장 */
+		const result = (await this.strategy.compressAndSave({
+			from: this.strategy.getTempDirectory(tempName),
+			to: this.strategy.getMainDirectory(`${savePath}/${mainName}`),
+		})) as Awaited<ReturnType<T['compressAndSave']>>;
 
 		return result;
 	}
 
+	/** Main 폴더에 있는 이미지 제거 */
 	async deleteMainImage({ path, name }: { path: string; name: string }) {
+		this.checkValidMainPath(path);
 		await rm(this.strategy.getMainDirectory(`${path}/${name}`), {
 			force: true,
 		});
 	}
 
+	/** Temp 폴더에 있는 이미지 제거 */
 	async deleteTempImage(name: string) {
 		await rm(this.strategy.getTempDirectory(name), {
 			force: true,
 		});
 	}
 
+	/** Buffer 형태의 이미지 데이터 가져오기 */
 	async getBufferImage({ path, name }: { path: string; name: string }) {
+		this.checkValidMainPath(path);
 		const image = await readFile(
 			this.strategy.getMainDirectory(`${path}/${name}`),
 		);

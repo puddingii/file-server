@@ -3,18 +3,12 @@ import { SharpStrategy } from '.';
 
 @Injectable()
 export class JpegStrategy extends SharpStrategy {
-	async compress(info: {
-		savePath: string;
-		mainName: string;
-		tempName: string;
-	}) {
+	async compressAndSave(info: { from: string; to: string }) {
 		try {
-			const { mainName, tempName, savePath } = info;
+			const { from, to } = info;
 
 			const tool = this.getToolInstance();
-			const compressResult = await tool(this.getTempDirectory(tempName))
-				.jpeg({ quality: 60 })
-				.toFile(this.getMainDirectory(`${savePath}/${mainName}`));
+			const compressResult = await tool(from).jpeg({ quality: 60 }).toFile(to);
 
 			return compressResult;
 		} catch (error) {
