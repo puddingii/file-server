@@ -11,6 +11,7 @@ export class ImageService {
 
 	constructor(private readonly cacheService: CacheService) {}
 
+	/** Object 형식 QueryString으로 변환 */
 	private objectToQueryString(obj: Record<string, string | number>) {
 		const convertedObj = Object.entries(obj).reduce(
 			(acc: Record<string, string>, [key, value]) => {
@@ -24,10 +25,12 @@ export class ImageService {
 		return new URLSearchParams(convertedObj).toString();
 	}
 
+	/** Name, path 등으로 CacheKey 생성 */
 	private convertToCacheKey({ name, path, height, width }: ImageEntity) {
 		return `${path}_${width ?? 'x'}/${height ?? 'x'}${name}`;
 	}
 
+	/** 리사이징 서버에 이미지 요청 */
 	private async getImageFromMain({ name, path, ...size }: ImageEntity) {
 		const queryStr = this.objectToQueryString(size);
 
@@ -48,6 +51,7 @@ export class ImageService {
 		const cacheKey = this.convertToCacheKey(params);
 
 		const cachedImage = this.cacheService.getCachedImage(cacheKey);
+		/** Caching된 이미지 있으면 그대로 반환 */
 		if (cachedImage && lookup(cacheKey)) {
 			this.logger.log(`cache hit: ${JSON.stringify(params)}`);
 
@@ -57,8 +61,10 @@ export class ImageService {
 			};
 		}
 
+		/** 없다면 리사이징 서버로부터 데이터 가져옴 */
 		try {
 			const { imageBuffer, contentType } = await this.getImageFromMain(params);
+			/** 리사이징 결과물 캐싱 */
 			this.cacheService.cacheImage(cacheKey, imageBuffer);
 
 			this.logger.log(`cache not hit: ${JSON.stringify(params)}`);
