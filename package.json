@@ -7,9 +7,7 @@
 	"packageManager": "yarn@3.8.1",
 	"license": "MIT",
 	"workspaces": [
-		"app",
-		"resize",
-		"cache"
+		"packages/*"
 	],
 	"scripts": {
 		"storage": "yarn workspace @file/storage",

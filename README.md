@@ -55,6 +55,6 @@ $ yarn file:cache {command}
 
 ## Document
 
-Please refer to the Notion link below for explanations such as architecture and trial and error.(Language: Korea)
+Please refer to the Notion link below for explanations such as architecture and trial and error.(Language: 한국어)
 
 Notion: <https://stormy-lighter-fb5.notion.site/File-Server-a01136fb954b4a8180b33ed483e61a2d?pvs=4>
