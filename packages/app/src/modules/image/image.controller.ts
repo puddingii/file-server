@@ -15,11 +15,11 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 import { ImageService } from './image.service';
 import diskStorage from './storages/diskStorage';
 import { DeleteImageDto, GetImageDto, UploadImageDto } from 'src/dto/image.dto';
-import { FileMaximumSize, ImageFileExtList } from 'src/enum';
-import { Response } from 'express';
+import { FileMaximumSize, ImageFileExtList } from '@file/global/dist/enum/file';
 
 @Controller('image')
 export class ImageController {

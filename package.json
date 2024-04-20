@@ -12,9 +12,11 @@
 	"scripts": {
 		"storage": "yarn workspace @file/storage",
 		"resize": "yarn workspace @file/resize",
-		"file:cache": "yarn workspace @file/cache"
+		"file:cache": "yarn workspace @file/cache",
+		"file:global": "yarn workspace @file/global"
 	},
 	"dependencies": {
+		"@file/global": "workspace:*",
 		"@nestjs/common": "^10.0.0",
 		"@nestjs/mapped-types": "^2.0.5",
 		"class-transformer": "^0.5.1",
