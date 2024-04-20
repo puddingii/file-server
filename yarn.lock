@@ -617,6 +617,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@file/storage@workspace:packages/app"
   dependencies:
+    "@file/global": "workspace:*"
     "@nestjs/cli": ^10.0.0
     "@nestjs/config": ^3.2.0
     "@nestjs/core": ^10.0.0
@@ -3864,7 +3865,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "file-server@workspace:."
   dependencies:
-    "@file/global": "workspace:*"
     "@nestjs/common": ^10.0.0
     "@nestjs/mapped-types": ^2.0.5
     "@typescript-eslint/eslint-plugin": ^6.0.0
