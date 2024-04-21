@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { resolve } from 'path';
 import { extension } from 'mime-types';
 import { diskStorage } from 'multer';
-import generateRandomString from 'src/utils/generateRandomString';
+import generateRandomString from '@file/global/dist/utils/generateRandomString';
 import { Root } from 'src/enum';
 
 export default diskStorage({

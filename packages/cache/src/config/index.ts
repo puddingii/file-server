@@ -8,11 +8,12 @@ import {
 	Max,
 	Min,
 } from 'class-validator';
-import { Environment } from 'src/enum';
+import { Environment } from '@file/global/dist/enum';
+import ValueOf from '@file/global/dist/utils/ValueOf';
 
 export default class AppConfig {
 	@IsEnum(Environment)
-	NODE_ENV: Environment;
+	NODE_ENV: ValueOf<typeof Environment>;
 
 	@IsNumber()
 	@Min(0)
