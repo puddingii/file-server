@@ -17,6 +17,7 @@
 		"all:build": "yarn workspaces foreach -A -p run build"
 	},
 	"dependencies": {
+		"@file/global": "workspace:*",
 		"@nestjs/common": "^10.0.0",
 		"@nestjs/mapped-types": "^2.0.5",
 		"class-transformer": "^0.5.1",
