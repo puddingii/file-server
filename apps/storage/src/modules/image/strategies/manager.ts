@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
 import { mkdir, readFile, rm } from 'fs/promises';
 import { SharpStrategy } from './sharp';
 
@@ -14,9 +18,7 @@ export class ImageManager {
 	/** Main path의 형태는 무조건 `${path}/image`일것 */
 	private checkValidMainPath(path: string) {
 		if (path.split('/').at(-1) !== 'image') {
-			throw new InternalServerErrorException(
-				'Main image path의 형식이 잘못되었습니다.',
-			);
+			throw new BadRequestException('Main image path의 형식이 잘못되었습니다.');
 		}
 	}
 
@@ -64,11 +66,17 @@ export class ImageManager {
 	/** Buffer 형태의 이미지 데이터 가져오기 */
 	async getBufferImage({ path, name }: { path: string; name: string }) {
 		this.checkValidMainPath(path);
-		const image = await readFile(
-			this.strategy.getMainDirectory(`${path}/${name}`),
-		);
-		const type = name.split('.').at(-1);
+		try {
+			const image = await readFile(
+				this.strategy.getMainDirectory(`${path}/${name}`),
+			);
+			const type = name.split('.').at(-1);
 
-		return { image, type };
+			return { image, type };
+		} catch (error) {
+			throw new NotFoundException(
+				'파일이 존재하지 않거나 불러올 수 없는 상태입니다.',
+			);
+		}
 	}
 }

@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+	Inject,
+	Injectable,
+	InternalServerErrorException,
+	Logger,
+	NotFoundException,
+} from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { performance } from 'perf_hooks';
 
@@ -17,17 +23,27 @@ export class ImageService {
 
 	/** 메인 서버로부터 이미지 데이터 가져오기. Buffer형태로 리턴 */
 	async getImageFromMain({ path, name }: { path: string; name: string }) {
-		const result = await fetch(`http://localhost:3032/image/${path}/${name}`, {
-			method: 'get',
-		});
+		try {
+			const result = await fetch(
+				`http://localhost:3032/image/${path}/${name}`,
+				{
+					method: 'get',
+				},
+			);
+			if (!result.ok) {
+				throw new NotFoundException('존재하지 않는 파일입니다.');
+			}
 
-		const image = await result.arrayBuffer();
-		/** 데이터가 없을 시 클라이언트에서 잘못 요청하거나 DB에 주소나 이름 값이 잘못된거임 */
-		if (!image) {
-			throw new NotFoundException('존재하지 않는 이미지 파일입니다.');
+			const image = await result.arrayBuffer();
+			/** 데이터가 없을 시 클라이언트에서 잘못 요청하거나 DB에 주소나 이름 값이 잘못된거임 */
+			if (!image) {
+				throw new NotFoundException('존재하지 않는 파일입니다.');
+			}
+
+			return Buffer.from(image);
+		} catch (error) {
+			throw new InternalServerErrorException('존재하지 않는 파일입니다.');
 		}
-
-		return Buffer.from(image);
 	}
 
 	/** Width, Height으로 리사이징 */
