@@ -3,7 +3,11 @@
 	"include": ["./src/**/*.ts"],
 	"exclude": ["node_modules", "dist"],
 	"compilerOptions": {
+		"declaration": false,
 		"outDir": "./dist",
-		"baseUrl": "./"
+		"baseUrl": "./",
+		"paths": {
+			"@file/global": ["../../libs/global/src"]
+		}
 	}
 }

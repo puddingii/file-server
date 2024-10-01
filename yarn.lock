@@ -555,9 +555,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@file/global@workspace:*, @file/global@workspace:packages/global":
+"@file/global@workspace:*, @file/global@workspace:libs/global":
   version: 0.0.0-use.local
-  resolution: "@file/global@workspace:packages/global"
+  resolution: "@file/global@workspace:libs/global"
   dependencies:
     "@nestjs/cli": ^10.0.0
     "@nestjs/config": ^3.2.0
@@ -3023,9 +3023,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"config@*, config@workspace:packages/config":
+"config@*, config@workspace:libs/config":
   version: 0.0.0-use.local
-  resolution: "config@workspace:packages/config"
+  resolution: "config@workspace:libs/config"
   languageName: unknown
   linkType: soft
 

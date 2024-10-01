@@ -1,7 +1,8 @@
 {
 	"compilerOptions": {
-		"composite": true,
-		"module": "commonjs",
+		// "composite": true,
+		"module": "CommonJS",
+		// "esModuleInterop": true,
 		"declaration": true,
 		"removeComments": true,
 		"emitDecoratorMetadata": true,
@@ -9,6 +10,8 @@
 		"allowSyntheticDefaultImports": true,
 		"target": "ESNext",
 		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
 		"incremental": true,
 		"skipLibCheck": true,
 		"strictNullChecks": false,

@@ -15,11 +15,11 @@ import {
 	UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { File } from '@file/global';
 import { Response } from 'express';
 import { ImageService } from './image.service';
 import diskStorage from './storages/diskStorage';
 import { DeleteImageDto, GetImageDto, UploadImageDto } from 'src/dto/image.dto';
-import { FileMaximumSize, ImageFileExtList } from '@file/global/dist/enum/file';
 
 @Controller('image')
 export class ImageController {
@@ -42,9 +42,9 @@ export class ImageController {
 		@UploadedFile(
 			new ParseFilePipe({
 				validators: [
-					new MaxFileSizeValidator({ maxSize: FileMaximumSize.Image }),
+					new MaxFileSizeValidator({ maxSize: File.FileMaximumSize.Image }),
 					new FileTypeValidator({
-						fileType: `.(${ImageFileExtList.join('|')})`,
+						fileType: `.(${File.ImageFileExtList.join('|')})`,
 					}),
 				],
 			}),

@@ -8,8 +8,7 @@ import {
 	Max,
 	Min,
 } from 'class-validator';
-import { Environment } from '@file/global/dist/enum';
-import ValueOf from '@file/global/dist/utils/ValueOf';
+import { ValueOf, Environment } from '@file/global';
 
 export default class AppConfig {
 	@IsEnum(Environment)

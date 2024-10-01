@@ -7,7 +7,7 @@
 	"packageManager": "yarn@3.8.1",
 	"license": "MIT",
 	"workspaces": [
-		"packages/*",
+		"libs/*",
 		"apps/*"
 	],
 	"scripts": {
