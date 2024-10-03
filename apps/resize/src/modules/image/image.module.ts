@@ -5,28 +5,33 @@ import { ImageController } from './image.controller';
 import { ImageService } from './image.service';
 
 import { ImageManager } from './manager';
+import { envConfig } from 'src/config/env.module';
 
-@Module({
-	imports: [
-		ClientsModule.register([
-			{
-				name: 'RESIZE_IMAGE_MICROSERVICE',
-				transport: Transport.KAFKA,
-				options: {
-					client: {
-						clientId: 'image',
-						brokers: ['localhost:9094'],
-					},
-					producer: {
-						allowAutoTopicCreation: true,
-						createPartitioner: Partitioners.LegacyPartitioner,
-					},
-					producerOnlyMode: true,
-				},
+const KafkaModule = ClientsModule.register([
+	{
+		name: 'RESIZE_IMAGE_MICROSERVICE',
+		transport: Transport.KAFKA,
+		options: {
+			client: {
+				clientId: 'image',
+				brokers: envConfig.kafkaClientBrokerList,
 			},
-		]),
-	],
-	controllers: [ImageController],
-	providers: [ImageService, ImageManager],
-})
-export class ImageModule {}
+			producer: {
+				allowAutoTopicCreation: true,
+				createPartitioner: Partitioners.LegacyPartitioner,
+			},
+			producerOnlyMode: true,
+		},
+	},
+]);
+
+@Module({})
+export class ImageModule {
+	static register() {
+		return {
+			imports: [KafkaModule],
+			controllers: [ImageController],
+			providers: [ImageService, ImageManager],
+		};
+	}
+}

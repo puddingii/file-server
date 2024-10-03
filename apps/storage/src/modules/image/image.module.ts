@@ -6,28 +6,29 @@ import { ImageService } from './image.service';
 import { JpegStrategy } from './strategies/sharp/jpeg.strategy';
 import { PngStrategy } from './strategies/sharp/png.strategy';
 import { ImageManager } from './strategies/manager';
+import { envConfig } from 'src/config';
 
 const strategyList = [JpegStrategy, PngStrategy, ImageManager];
-@Module({
-	imports: [
-		ClientsModule.register([
-			{
-				name: 'IMAGE_MICROSERVICE',
-				transport: Transport.KAFKA,
-				options: {
-					client: {
-						clientId: 'image',
-						brokers: ['localhost:9094'],
-					},
-					producer: {
-						allowAutoTopicCreation: true,
-						createPartitioner: Partitioners.LegacyPartitioner,
-					},
-					producerOnlyMode: true,
-				},
+const KafkaModule = ClientsModule.register([
+	{
+		name: 'IMAGE_MICROSERVICE',
+		transport: Transport.KAFKA,
+		options: {
+			client: {
+				clientId: 'image',
+				brokers: envConfig.kafkaClientBrokerList,
 			},
-		]),
-	],
+			producer: {
+				allowAutoTopicCreation: true,
+				createPartitioner: Partitioners.LegacyPartitioner,
+			},
+			producerOnlyMode: true,
+		},
+	},
+]);
+
+@Module({
+	imports: [KafkaModule],
 	controllers: [ImageController],
 	providers: [ImageService, ...strategyList],
 })

@@ -2,12 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
-import AppConfig from './config';
+import { AppConfig } from './config';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	const logger = new Logger();
-	const { PORT, isDevelopment, isProduction, originList } = app.get(AppConfig);
+	const {
+		PORT,
+		isDevelopment,
+		isProduction,
+		originList,
+		kafkaClientBrokerList,
+	} = app.get(AppConfig);
 
 	app.enableCors({ origin: originList, credentials: true });
 	app.useGlobalPipes(
@@ -24,7 +30,7 @@ async function bootstrap() {
 		options: {
 			client: {
 				clientId: 'image',
-				brokers: ['localhost:9094'],
+				brokers: kafkaClientBrokerList,
 			},
 			producer: {
 				allowAutoTopicCreation: true,
@@ -35,6 +41,7 @@ async function bootstrap() {
 
 	await app.listen(PORT, () => {
 		logger.log(`Nest on: http://localhost:${PORT}`);
+		process.send && process.send('ready');
 	});
 }
 bootstrap();

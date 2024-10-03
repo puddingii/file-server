@@ -1,0 +1,16 @@
+name: 'file_server_dev'
+
+services:
+  storage_backend:
+    build:
+      context: ${BASE_PATH}
+      dockerfile: docker/apps/Dockerfile.storage.dev
+    platform: linux/x86_64
+    volumes:
+      - image_dump:/usr/index/apps/storage/dist/apps/storage/assets
+    ports:
+      - '3032:3032'
+      - '3132:3132'
+
+volumes:
+  image_dump:
