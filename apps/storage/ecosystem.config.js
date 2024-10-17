@@ -12,7 +12,6 @@ module.exports = [
 		env_development: {
 			NODE_ENV: 'development',
 			PORT: '3032',
-			ORIGIN_LIST_STR: 'http://localhost:3044',
 		},
 	},
 	// {

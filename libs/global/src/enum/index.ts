@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+
 import FileEnum from './file';
 
 export const Environment = {
@@ -11,7 +12,12 @@ export const KafkaTopic = {
 	IMAGE_TOPIC: 'image-topic',
 } as const;
 
-export const Root = resolve(__dirname, `../../`);
+export const Root = resolve(__dirname, '../../');
+export const BuildRoot = resolve(__dirname, '../../../../../');
+export const getFilePath = (filename: string, isBuild?: boolean) => {
+	const root = isBuild ? BuildRoot : Root;
+	return resolve(root, filename);
+};
 
 export const File = FileEnum;
 

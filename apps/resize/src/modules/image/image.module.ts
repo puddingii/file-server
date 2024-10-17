@@ -5,7 +5,7 @@ import { ImageController } from './image.controller';
 import { ImageService } from './image.service';
 
 import { ImageManager } from './manager';
-import { envConfig } from 'src/config/env.module';
+import { envConfig } from 'src/config';
 
 const KafkaModule = ClientsModule.register([
 	{
@@ -25,13 +25,9 @@ const KafkaModule = ClientsModule.register([
 	},
 ]);
 
-@Module({})
-export class ImageModule {
-	static register() {
-		return {
-			imports: [KafkaModule],
-			controllers: [ImageController],
-			providers: [ImageService, ImageManager],
-		};
-	}
-}
+@Module({
+	imports: [KafkaModule],
+	controllers: [ImageController],
+	providers: [ImageService, ImageManager],
+})
+export class ImageModule {}

@@ -1,14 +1,35 @@
-FROM node:20-alpine as ts-compiler
+FROM node:20-alpine AS ts-compiler
 WORKDIR /usr/index
-COPY package*.json tsconfig*.json yarn.lock ./
-RUN yarn install --pure-lockfile
-COPY . ./
-RUN yarn build
+COPY ../../.yarn ./.yarn
+COPY ../../yarn.lock ../../package*.json ../../tsconfig.json ../../.yarnrc.yml ./
+COPY ../../apps ./apps
+COPY ../../libs ./libs
+RUN yarn set version 4.5.0
+# RUN yarn workspaces focus @file/storage
+RUN yarn install --immutable
+RUN yarn file:storage build
+
+# Remove other app module
+# Reinstall production module
+FROM node:20-alpine AS dev-remover
+WORKDIR /usr/index
+COPY --from=ts-compiler /usr/index/.yarn ./.yarn
+COPY --from=ts-compiler /usr/index/package*.json /usr/index/yarn.lock  /usr/index/.yarnrc.yml ./
+COPY --from=ts-compiler /usr/index/apps/storage/ecosystem.config.js /usr/index/apps/storage/
+COPY --from=ts-compiler /usr/index/apps/storage/dist ./apps/storage/dist
+COPY --from=ts-compiler /usr/index/apps/storage/package.json ./apps/storage/
+COPY --from=ts-compiler /usr/index/libs ./libs
+RUN yarn set version 4.5.0
+RUN yarn workspaces focus @file/storage --production
 
 FROM keymetrics/pm2:18-alpine
+# 나중에 ENV 지울 것(테스트용임)
+ENV ORIGIN_LIST_STR http://localhost:3044
+ENV KAFKA_CLIENT_BROKERS host.docker.internal:9094
 WORKDIR /usr/index
 ENV TZ=Asia/Seoul
-COPY --from=ts-compiler /usr/index ./
+ENV NODE_ENV=production
+COPY --from=dev-remover /usr/index ./
 RUN chmod -R 777 /usr/index
 
-CMD ["pm2-runtime", "start", "ecosystem.config.js", "--env", "development"]
+CMD ["pm2-runtime", "start", "/usr/index/apps/storage/ecosystem.config.js", "--env", "production"]

@@ -26,6 +26,9 @@ export class AppConfig {
 	@IsString()
 	KAFKA_CLIENT_BROKERS: string;
 
+	@IsString()
+	STORAGE_SERVER: string;
+
 	@IsBoolean()
 	get isDevelopment() {
 		return this.NODE_ENV === Environment.Development;

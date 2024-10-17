@@ -23,6 +23,9 @@ export class AppConfig {
 	@IsString()
 	ORIGIN_LIST_STR: string;
 
+	@IsString()
+	RESIZING_SERVER: string;
+
 	@IsBoolean()
 	get isDevelopment() {
 		return this.NODE_ENV === Environment.Development;

@@ -10,6 +10,7 @@ import { performance } from 'perf_hooks';
 
 import { ImageEntity } from 'src/entity/image.entity';
 import { ImageManager } from './manager';
+import { envConfig } from 'src/config';
 
 @Injectable()
 export class ImageService {
@@ -25,7 +26,7 @@ export class ImageService {
 	async getImageFromMain({ path, name }: { path: string; name: string }) {
 		try {
 			const result = await fetch(
-				`http://localhost:3032/image/${path}/${name}`,
+				`${envConfig.STORAGE_SERVER}/image/${path}/${name}`,
 				{
 					method: 'get',
 				},

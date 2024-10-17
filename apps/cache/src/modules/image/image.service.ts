@@ -1,9 +1,10 @@
 import { NotFoundException, Injectable, Logger } from '@nestjs/common';
 import { lookup } from 'mime-types';
+import { URLSearchParams } from 'url';
 
 import { ImageEntity } from 'src/entity/image.entity';
 import { CacheService } from '../node-cache/cache.service';
-import { URLSearchParams } from 'url';
+import { envConfig } from 'src/config';
 
 @Injectable()
 export class ImageService {
@@ -35,7 +36,7 @@ export class ImageService {
 		const queryStr = this.objectToQueryString(size);
 
 		const response = await fetch(
-			`http://localhost:3031/image/${path}/${name}?${queryStr}`,
+			`${envConfig.RESIZING_SERVER}/image/${path}/${name}?${queryStr}`,
 		);
 		if (!response.ok) {
 			throw new NotFoundException('존재하지 않는 이미지 파일입니다.');

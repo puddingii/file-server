@@ -1,6 +1,13 @@
 name: 'file_server_dev'
 
 services:
+  base_modules:
+    build:
+      context: ${BASE_PATH}
+      dockerfile: docker/apps/Dockerfile.base
+    platform: linux/x86_64
+    command: echo "base_modules build complete"
+
   storage_backend:
     build:
       context: ${BASE_PATH}
@@ -10,7 +17,28 @@ services:
       - image_dump:/usr/index/apps/storage/dist/apps/storage/assets
     ports:
       - '3032:3032'
-      - '3132:3132'
+    depends_on:
+      - base_modules
+
+  cache_backend:
+    build:
+      context: ${BASE_PATH}
+      dockerfile: docker/apps/Dockerfile.cache.dev
+    platform: linux/x86_64
+    ports:
+      - '3030:3030'
+    depends_on:
+      - base_modules
+
+  resize_backend:
+    build:
+      context: ${BASE_PATH}
+      dockerfile: docker/apps/Dockerfile.resize.dev
+    platform: linux/x86_64
+    ports:
+      - '3031:3031'
+    depends_on:
+      - base_modules
 
 volumes:
   image_dump:

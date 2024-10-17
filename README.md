@@ -25,6 +25,9 @@ $ yarn resize {command}
 
 # Cache server
 $ yarn file:cache {command}
+
+# Docker Dev Server
+$ docker compose -f docker/apps/docker-compose.dev.yml up -d
 ```
 
 ## Features
