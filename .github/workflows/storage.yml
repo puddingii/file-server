@@ -68,6 +68,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - name: Hmmm
+        run: echo $USER
+
       # 기존 Container 확인
       - name: Docker Check Existed Container
         id: docker-container-check-result
