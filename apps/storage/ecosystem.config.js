@@ -1,5 +1,6 @@
 module.exports = [
 	{
+		//Test
 		name: 'file_storage_backend_1',
 		script: './apps/storage/dist/apps/storage/src/main.js',
 		wait_ready: true,
