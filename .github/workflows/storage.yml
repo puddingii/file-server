@@ -18,7 +18,7 @@ jobs:
   # 빌드 Job
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: [file-server]
     steps:
       # github repository에서 checkout
       - uses: actions/checkout@v3
