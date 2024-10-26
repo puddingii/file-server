@@ -51,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
-          file: ./docker/Dockerfile.storage
+          file: ./docker/apps/Dockerfile.storage
           push: true
           tags: ${{ env.DOCKER_IMAGE }}:latest
 
