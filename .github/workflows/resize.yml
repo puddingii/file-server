@@ -1,20 +1,19 @@
-name: file-server-storage
+name: file-server-resize
 
 on:
   push:
     paths:
-      - 'apps/storage/**'
+      - 'apps/resize/**'
       - 'libs/**'
       - '!**/*.md'
-      - '.github/workflows/storage.yml'
+      - '.github/workflows/resize.yml'
     branches: [main]
 
 # 환경설정
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/storage
+  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/resize
   VERSION: ${{ github.sha }}
-  CONTAINER_NAME: file_server_storage
-  FILE_DUMP_VOLUME: file_dump_volume
+  CONTAINER_NAME: file_server_resize
 
 jobs:
   # 빌드 Job
@@ -53,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
-          file: ./docker/apps/Dockerfile.storage
+          file: ./docker/apps/Dockerfile.resize
           push: true
           tags: ${{ env.DOCKER_IMAGE }}:latest
 
@@ -99,8 +98,7 @@ jobs:
       - name: Docker run
         run: |
           docker run -d \
-          --env-file ${{ secrets.STORAGE_ENV_PATH }} \
-          -v ${{ env.FILE_DUMP_VOLUME }}:/usr/index/apps/storage/dist/apps/storage/assets \
-          -p ${{ secrets.STORAGE_PORT }}:${{ secrets.STORAGE_PORT }} \
+          --env-file ${{ secrets.RESIZE_ENV_PATH }} \
+          -p ${{ secrets.RESIZE_PORT }}:${{ secrets.RESIZE_PORT }} \
           --name ${{ env.CONTAINER_NAME }} \
           --restart always ${{ env.DOCKER_IMAGE }}:latest
