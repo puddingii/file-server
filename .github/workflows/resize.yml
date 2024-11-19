@@ -103,3 +103,7 @@ jobs:
           -p ${{ secrets.RESIZE_PORT }}:${{ secrets.RESIZE_PORT }} \
           --name ${{ env.CONTAINER_NAME }} \
           --restart always ${{ env.DOCKER_IMAGE }}:latest
+
+      - name: Docker network connection
+        run: |
+          docker network connect ${{ secrets.FILE_SERVER_NET }} ${{ env.CONTAINER_NAME }}
