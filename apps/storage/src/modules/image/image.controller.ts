@@ -44,7 +44,7 @@ export class ImageController {
 				validators: [
 					new MaxFileSizeValidator({ maxSize: File.FileMaximumSize.Image }),
 					new FileTypeValidator({
-						fileType: `.(${File.ImageFileExtList.join('|')})`,
+						fileType: `${File.ImageFileMimeList.join('|')}`,
 					}),
 				],
 			}),

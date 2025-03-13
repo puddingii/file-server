@@ -17,7 +17,7 @@ export const ImageMimeMapper = {
 } as const;
 
 type TImageMimeMapperValues = ('png' | 'jpeg' | 'jpg')[];
-export const ImageFileExtList = Object.values(ImageMimeMapper).reduce(
+export const ImageTypeList = Object.values(ImageMimeMapper).reduce(
 	(acc, cur) => {
 		acc.push(...cur);
 		return acc;
@@ -37,6 +37,6 @@ export default {
 	FileMaximumSize,
 	FileSize,
 	ImageMimeMapper,
-	ImageFileExtList,
+	ImageTypeList,
 	ImageFileMimeList,
 };
