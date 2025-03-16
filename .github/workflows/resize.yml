@@ -107,3 +107,4 @@ jobs:
       - name: Docker network connection
         run: |
           docker network connect ${{ secrets.FILE_SERVER_NET }} ${{ env.CONTAINER_NAME }}
+          docker network connect ${{ secrets.KAFKA_NET }} ${{ env.CONTAINER_NAME }}

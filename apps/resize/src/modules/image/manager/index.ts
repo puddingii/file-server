@@ -23,7 +23,7 @@ export class ImageManager {
 	}
 
 	/** 리사이징은 resize함수를 부르기 전 set함수로 세팅해둔 값으로 진행 */
-	async resize(image: ArrayBuffer) {
+	async resize(image: Buffer<ArrayBuffer>) {
 		const options = Object.entries(this.size).reduce(
 			(acc: typeof this.size, [key, value]) => {
 				if (value) {

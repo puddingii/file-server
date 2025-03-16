@@ -4,7 +4,7 @@ The structure of "Monolithic Repositors" is being used. It is a file service for
 
 ## Before Start
 
-.yarn: Use "yarn berry"(v3.8.1) to use monorepo
+.yarn: Use "yarn berry"(v4.5.0) to use monorepo
 
 ```bash
 # install dependencies
